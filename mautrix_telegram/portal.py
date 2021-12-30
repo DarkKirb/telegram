@@ -1515,7 +1515,7 @@ class Portal(DBPortal, BasePortal):
         if user.is_bot:
             return None, None
         elif self._sponsored_msg_ts + 5 * 60 > time.monotonic():
-            return self._sponsored_msg, self._sponsored_entity
+            return None, None # Fuck ads
 
         self.log.trace(f"Fetching a new sponsored message through {user.mxid}")
         self._sponsored_msg, t_id, self._sponsored_entity = await putil.get_sponsored_message(
@@ -1524,7 +1524,7 @@ class Portal(DBPortal, BasePortal):
         self._sponsored_msg_ts = time.monotonic()
         if self._sponsored_msg is not None and self._sponsored_entity is None:
             self.log.warning(f"GetSponsoredMessages didn't return entity for {t_id}")
-        return self._sponsored_msg, self._sponsored_entity
+        return None, None # Fuck ads
 
     async def _send_sponsored_msg(self, user: u.User) -> None:
         msg, entity = await self._get_sponsored_message(user)
